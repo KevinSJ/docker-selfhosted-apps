@@ -1,0 +1,15 @@
+{{if eq (env "GLOBAL_HTTPS_REDIRECT") "true"}}
+[http]
+  # Add the router
+  [http.routers]
+    [http.routers.http-catchall]
+      entryPoints = ["web"]
+      middlewares = ["redirect-to-https"]
+      rule = "hostregexp(`{host:.+}`)"
+      service = "noop@internal"
+  # Add the middleware
+  [http.middlewares]
+    [http.middlewares.redirect-to-https.redirectscheme]
+      scheme="https"
+      permanent=true
+{{ end }}

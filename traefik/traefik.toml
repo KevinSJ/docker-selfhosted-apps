@@ -1,0 +1,22 @@
+[entrypoints.web]
+  address= ":80"
+  [entryPoints.web.forwardedHeaders]
+    trustedIPs = ["127.0.0.1/32", "192.168.1.7"]
+
+[entrypoints.websecure]
+  address= ":443"
+  [entryPoints.websecure.forwardedHeaders]
+    trustedIPs = ["127.0.0.1/32", "192.168.1.7"]
+
+[api]
+  dashboard=true
+
+[log]
+  level="DEBUG"
+
+[providers.docker]
+  exposedByDefault=false
+  network="traefik-proxy"
+
+[providers.file]
+  directory = "./confs.d"
