@@ -3,9 +3,10 @@ version: '3'
 services:
   reverse-proxy:
     # The official v2 Traefik docker image
-    container_name: reverse-proxy
     image: traefik:v2.10
     restart: unless-stopped
+    container_name: reverse-proxy
+    hostname: reverse-proxy
     environment:
       - "GLOBAL_HTTPS_REDIRECT=${GLOBAL_HTTPS_REDIRECT}"
       - "DASHBOARD_DOMAIN=${DASHBOARD_DOMAIN}"
