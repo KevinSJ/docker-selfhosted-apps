@@ -6,10 +6,10 @@ services:
     container_name: reverse-proxy
     image: traefik:v2.10
     restart: unless-stopped
-    #depends_on:
-      #- socket-proxy
     environment:
       - "GLOBAL_HTTPS_REDIRECT=${GLOBAL_HTTPS_REDIRECT}"
+      - "DASHBOARD_DOMAIN=${DASHBOARD_DOMAIN}"
+      - "DASHBOARD_AUTH=${DASHBOARD_AUTH}"
     volumes:
       # Mounting the docker socket is not the best solution
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -19,15 +19,7 @@ services:
       - traefik-proxy
     labels:
       - "traefik.enable=true"
-
-      - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_DOMAIN}`)"
-      - "traefik.http.routers.dashboard.tls=${ENABLE_TLS}"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=auth"
-
-      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_BASIC_AUTH}"
     ports:
-      # The HTTP port
       - "80:80"
       - "443:443"
 
