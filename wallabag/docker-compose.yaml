@@ -6,7 +6,7 @@ services:
     container_name: wallabag
     hostname: wallabag
     environment:
-      - SYMFONY__ENV__DOMAIN_NAME=http://${WALLABAG_DOMAIN}
+      - SYMFONY__ENV__DOMAIN_NAME=https://${WALLABAG_DOMAIN}
       - SYMFONY__ENV__SERVER_NAME="My wallabag instance"
     expose:
       - 80
