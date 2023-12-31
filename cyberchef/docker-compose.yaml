@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  cyberchef:
+    image: mpepping/cyberchef
+    restart: unless-stopped
+    container_name: cyberchef
+    expose:
+      - 8000
+    networks:
+      - "traefik-proxy"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cyberchef.rule=Host(`${CYBERCHEF_DOMAIN}`)"
+      - "traefik.http.routers.cyberchef.tls=true"
+      - "traefik.http.routers.cyberchef.entrypoints=web,websecure"
+
+      - "traefik.http.services.cyberchef.loadbalancer.server.port=8000"
+
+      - "traefik.http.services.cyberchef.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.cyberchef.loadbalancer.healthcheck.interval=15m"
+      - "traefik.http.services.cyberchef.loadbalancer.healthcheck.timeout=3s"
+      - "traefik.http.services.cyberchef.loadbalancer.healthcheck.scheme=http"
+
+      - "traefik.docker.network=traefik-proxy"
+networks:
+  traefik-proxy:
+    external: true
