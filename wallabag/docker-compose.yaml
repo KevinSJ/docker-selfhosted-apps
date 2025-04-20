@@ -8,8 +8,7 @@ services:
     environment:
       - SYMFONY__ENV__DOMAIN_NAME=https://${WALLABAG_DOMAIN}
       - SYMFONY__ENV__SERVER_NAME="My wallabag instance"
-    expose:
-      - 80
+      - PHP_MEMORY_LIMIT=256M
     labels:
       - "traefik.enable=true"
       # Routers
