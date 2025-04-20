@@ -1,19 +1,20 @@
-version: '3'
-
+---
 services:
   reverse-proxy:
     # The official v2 Traefik docker image
-    image: traefik:v2.10
+    mem_limit: 120m
+    image: traefik:latest
     restart: unless-stopped
     container_name: reverse-proxy
     hostname: reverse-proxy
-    environment:
-      - "GLOBAL_HTTPS_REDIRECT=${GLOBAL_HTTPS_REDIRECT}"
-      - "DASHBOARD_DOMAIN=${DASHBOARD_DOMAIN}"
-      - "DASHBOARD_AUTH=${DASHBOARD_AUTH}"
+    env_file:
+      - path: ./.env
+        required: true # default
     volumes:
       # Mounting the docker socket is not the best solution
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/$USER/logs/traefik:/logs
+      - /home/$USER/secrets/traefik:/secrets
       - ./traefik.toml:/traefik.toml:ro
       - ../confs.d:/confs.d:ro
     networks:
@@ -28,3 +29,4 @@ services:
 networks:
   traefik-proxy:
     external: true
+...
