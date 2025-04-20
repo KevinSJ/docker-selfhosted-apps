@@ -12,7 +12,24 @@
   dashboard=true
 
 [log]
-  level="DEBUG"
+  level="INFO"
+
+[accessLog]
+    format = "json"
+    filePath="/logs/access_log.json"
+    [accessLog.fields.names]
+      "ClientUsername" = "drop"
+      "RouterName" = "keep"
+      "ServiceName" = "keep"
+      "RequestAddr" = "keep"
+
+    [accessLog.fields.headers]
+      defaultMode = "keep"
+
+      [accessLog.fields.headers.names]
+        "User-Agent" = "keep"
+        "Authorization" = "drop"
+        "Content-Type" = "keep"
 
 [providers.docker]
   exposedByDefault=false

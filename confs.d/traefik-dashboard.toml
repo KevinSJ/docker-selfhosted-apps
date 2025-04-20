@@ -1,16 +1,21 @@
 # Require both DASHBOARD_DOMAIN and DASHBOARD_AUTH to enable
 # dashboard
-{{if and (env "DASHBOARD_DOMAIN") (env "DASHBOARD_AUTH")}}
+{{- if and (env "DASHBOARD_DOMAIN") (env "DASHBOARD_AUTH")}}
 [http]
   # Add the router
   [http.routers]
     [http.routers.dashboard]
-      tls = "{{eq (env "GLOBAL_HTTPS_REDIRECT") "true"}}"
       middlewares = ["auth"]
       rule = "Host(`{{env "DASHBOARD_DOMAIN"}}`)"
       service = "api@internal"
+      {{if eq (env "GLOBAL_HTTPS_REDIRECT") "true" }}
+      [http.routers.dashboard.tls]
+      certResolver="myresolver"
+      {{ end }}
+
   # Add the middleware
   [http.middlewares]
     [http.middlewares.auth.basicauth]
       users = "{{ env "DASHBOARD_AUTH" }}"
-{{ end }}
+
+{{- end}}
