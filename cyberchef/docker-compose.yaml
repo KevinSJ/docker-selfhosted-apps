@@ -4,8 +4,6 @@ services:
     image: mpepping/cyberchef
     restart: unless-stopped
     container_name: cyberchef
-    expose:
-      - 8000
     networks:
       - "traefik-proxy"
     labels:
