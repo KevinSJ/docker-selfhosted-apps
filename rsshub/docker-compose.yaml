@@ -1,11 +1,13 @@
 services:
   rsshub:
-    image: diygod/rsshub:2024-12-14
+    #image: diygod/rsshub:2024-12-14
+    image: diygod/rsshub:2025-10-14
     restart: unless-stopped
     container_name: rsshub
     hostname: rsshub
     environment:
       - NODE_ENV=production
+      - ALLOW_USER_SUPPLY_UNSAFE_DOMAIN=true
     labels:
       - "traefik.enable=true"
       # Routers
