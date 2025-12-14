@@ -2,6 +2,7 @@ services:
   ntfy:
     image: binwiederhier/ntfy
     container_name: ntfy
+    mem_limit: 50m
     command:
       - serve
     networks:
@@ -12,9 +13,14 @@ services:
       - "traefik.http.services.ntfy.loadbalancer.server.port=80"
       - "traefik.http.routers.ntfy.entrypoints=web"
 
+      - "traefik.http.routers.ntfyprivate.rule=Host(`${NTFY_DOMAIN_2}`)"
+      - "traefik.http.routers.ntfyprivate.tls.certResolver=myresolver"
+      - "traefik.http.routers.ntfyprivate.service=ntfy@docker"
+      - "traefik.http.routers.ntfyprivate.entrypoints=websecure"
+
       - "traefik.docker.network=traefik-proxy"
     environment:
-      - TZ=UTC    # optional: set desired timezone
+      - TZ=Pacific/Auckland    # optional: set desired timezone
       - NTFY_BEHIND_PROXY=true
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -28,8 +34,6 @@ services:
         retries: 3
         start_period: 40s
     restart: unless-stopped
-
-
 
 networks:
   traefik-proxy:
