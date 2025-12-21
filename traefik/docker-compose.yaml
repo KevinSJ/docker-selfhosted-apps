@@ -1,12 +1,35 @@
 ---
 services:
+  robots:
+    container_name: robots
+    mem_limit: 6m
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - reverse-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.robots.rule=HostRegexp(`.*`) && Path(`/robots.txt`)"
+      - "traefik.http.routers.robots.entrypoints=web"
+      - "traefik.http.routers.robots.priority=9999"
+      #- "traefik.http.routers.robots.tls=true"
+      #- "traefik.http.routers.robots.tls.certResolver=myresolver"
+      - "traefik.docker.network=traefik-proxy"
+    networks:
+      - "traefik-proxy"
+    volumes:
+      - ./robots.txt:/usr/share/nginx/html/robots.txt:ro
+
   reverse-proxy:
-    # The official v2 Traefik docker image
     mem_limit: 120m
     image: traefik:latest
     restart: unless-stopped
     container_name: reverse-proxy
     hostname: reverse-proxy
+    devices:
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
     env_file:
       - path: ./.env
         required: true # default
@@ -15,6 +38,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /home/$USER/logs/traefik:/logs
       - /home/$USER/secrets/traefik:/secrets
+      - /home/$USER/certs/root_ca.crt:/ca-cert/step_ca.crt
       - ./traefik.toml:/traefik.toml:ro
       - ../confs.d:/confs.d:ro
     networks:
