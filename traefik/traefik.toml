@@ -1,12 +1,12 @@
 [entrypoints.web]
   address= ":80"
   [entryPoints.web.forwardedHeaders]
-    trustedIPs = ["127.0.0.1/32", "192.168.1.7"]
+    trustedIPs = ["127.0.0.1/32", "192.168.0.0/16", "172.16.0.0/12", "10.0.0.0/8"]
 
 [entrypoints.websecure]
   address= ":443"
   [entryPoints.websecure.forwardedHeaders]
-    trustedIPs = ["127.0.0.1/32", "192.168.1.7"]
+    trustedIPs = ["127.0.0.1/32", "192.168.0.0/16", "172.16.0.0/12", "10.0.0.0/8"]
 
 [api]
   dashboard=true
